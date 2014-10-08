@@ -1,0 +1,31 @@
+(* Note that I had to extract the prefixes from the emotify function.
+ * The postfix technicallyy could be stuffed back again,
+ * but that would be kinda ugly. *)
+let rec emotify str = function
+| (reg, img) :: tail ->
+emotify (Str.global_replace reg img str) tail
+| _ -> str
+
+let emotePrefix = "<img src='images/emotes/"
+let emotePostfix = "'>"
+
+let emotes = [
+(Str.regexp "8-)", emotePrefix ^ "glass.gif" ^ emotePostfix);
+(Str.regexp ":-\\?", emotePrefix ^ "cnf.gif" ^ emotePostfix);
+(* -- BEGIN -- *)
+(* Note that these three regexes are semantically the same as tested by the
+ * Java JUnit tests. First rule: If there's no ampersand since the previous
+ * semicolon, this semicolon can't belong to an entity. Replace! *)
+(Str.regexp ";\\([^&]*\\);)", ";\\1" ^ emotePrefix ^ "wink.gif" ^ emotePostfix);
+(* If there's no ampersand at all, this semicolon can't belong to an entity. Replace! *)
+(Str.regexp "^\\([^&]*\\);)", "\\1" ^ emotePrefix ^ "wink.gif" ^ emotePostfix);
+(* This is actually the only non-waterproof rule:
+ * If there's no ampersand in the previous 8 characters (allow more),
+ * this semicolon hopefully doesn't belong to an entity. Replace! *)
+(Str.regexp "\\([^&][^&][^&][^&][^&][^&][^&][^&]\\);)",
+   "\\1" ^ emotePrefix ^ "wink.gif" ^ emotePostfix);
+(* -- END -- *)
+(Str.regexp "::)", emotePrefix ^ "roll.gif" ^ emotePostfix);
+(Str.regexp ":@", emotePrefix ^ "angry.gif" ^ emotePostfix);
+(* ...  *)
+]
