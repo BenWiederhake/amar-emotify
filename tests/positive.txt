@@ -1,0 +1,8 @@
+;)
+wink.gif
+Hello ;)
+Hello wink.gif
+;) How are you?
+wink.gif How are you?
+&lt;;)
+&lt;wink.gif
